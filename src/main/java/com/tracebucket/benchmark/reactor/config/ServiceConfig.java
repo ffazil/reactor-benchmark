@@ -17,7 +17,9 @@ public class ServiceConfig {
 
     @Bean
     public Reactor eventBus(Environment env) {
-        return Reactors.reactor().env(env).get();
+        return Reactors.reactor().env(env)
+                .dispatcher(Environment.THREAD_POOL)
+                .get();
     }
 
 
