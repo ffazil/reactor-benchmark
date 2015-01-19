@@ -23,7 +23,7 @@ public class BenchmarkController {
 
     @RequestMapping(value = "/benchmark", method = RequestMethod.GET)
     public ResponseEntity<String> test(){
-        for(int i = 0; i < 1000000; i++){
+        for(int i = 0; i < 50; i++){
             eventBus.notify("benchmark", Event.wrap(new Integer(i)));
             log.info("Published event " + i);
         }

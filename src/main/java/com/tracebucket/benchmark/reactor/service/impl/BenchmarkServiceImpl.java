@@ -18,5 +18,11 @@ public class BenchmarkServiceImpl implements BenchmarkService{
     @Selector(value = "benchmark", reactor = "@eventBus")
     public void benchmark(Event<Integer> seedEvent) {
         log.info("Received event " + seedEvent.getData());
+        try {
+            Thread.sleep(300);
+            log.info("Processed event " + seedEvent.getData());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
