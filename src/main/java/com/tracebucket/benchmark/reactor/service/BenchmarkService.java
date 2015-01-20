@@ -8,4 +8,5 @@ import reactor.event.Event;
 public interface BenchmarkService {
 
     public void benchmark(Event<Integer> seedEvent);
+    public void payload(Event<Object> payload);
 }

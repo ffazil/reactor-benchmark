@@ -1,4 +1,4 @@
-package com.tracebucket.benchmark.reactor.config;
+package com.tracebucket.benchmark.reactor.test.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +13,7 @@ import reactor.spring.context.config.EnableReactor;
 @Configuration
 @ComponentScan(basePackages = {"com.tracebucket.benchmark.reactor.service.impl"}, scopedProxy = ScopedProxyMode.INTERFACES)
 @EnableReactor
-public class ServiceConfig {
+public class ServiceTestConfig {
 
     @Bean
     public Reactor eventBus(Environment env) {

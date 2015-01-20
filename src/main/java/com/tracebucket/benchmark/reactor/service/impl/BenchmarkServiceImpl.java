@@ -1,6 +1,7 @@
 package com.tracebucket.benchmark.reactor.service.impl;
 
 import com.tracebucket.benchmark.reactor.service.BenchmarkService;
+import com.tracebucket.benchmark.reactor.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.event.Event;
@@ -24,5 +25,11 @@ public class BenchmarkServiceImpl implements BenchmarkService{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @Selector(value = "message", reactor = "@eventBus")
+    public void payload(Event<Object> payload) {
+        log.info("Processed event " + payload.getData().toString());
     }
 }
