@@ -4,9 +4,11 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,8 +19,18 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class RabbitTestConfig {
 
-    @Autowired
-    private ConnectionFactory connectionFactory;
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setHost("127.0.0.1");
+        cachingConnectionFactory.setPort(5672);
+        cachingConnectionFactory.setUsername("guest");
+        cachingConnectionFactory.setPassword("guest");
+        //cachingConnectionFactory.setConnectionCacheSize(100);
+        cachingConnectionFactory.setCacheMode(CachingConnectionFactory.CacheMode.CHANNEL);
+        cachingConnectionFactory.setChannelCacheSize(8);
+        return cachingConnectionFactory;
+    }
 
     @Bean
     public Queue sampleQueue(){
@@ -40,7 +52,7 @@ public class RabbitTestConfig {
     @Bean
     @Primary
     public RabbitTemplate rabbitTemplate() {
-        RabbitTemplate r = new RabbitTemplate(connectionFactory);
+        RabbitTemplate r = new RabbitTemplate(connectionFactory());
         r.setExchange(sampleExchange().getName());
         r.setChannelTransacted(true);
         r.setRoutingKey("exc.key");

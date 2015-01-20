@@ -2,6 +2,7 @@ package com.tracebucket.benchmark.reactor.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,18 @@ public class RabbitInboundFlow {
 
 
 
-    @Autowired
-    private ConnectionFactory connectionFactory;
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setHost("127.0.0.1");
+        cachingConnectionFactory.setPort(5672);
+        cachingConnectionFactory.setUsername("guest");
+        cachingConnectionFactory.setPassword("guest");
+        //cachingConnectionFactory.setConnectionCacheSize(100);
+        cachingConnectionFactory.setCacheMode(CachingConnectionFactory.CacheMode.CHANNEL);
+        cachingConnectionFactory.setChannelCacheSize(8);
+        return cachingConnectionFactory;
+    }
 
     @Autowired
     private Reactor eventBus;
@@ -36,10 +47,10 @@ public class RabbitInboundFlow {
     @Bean
     public SimpleMessageListenerContainer simpleMessageListenerContainer() {
         SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
-        listenerContainer.setConnectionFactory(this.connectionFactory);
+        listenerContainer.setConnectionFactory(this.connectionFactory());
         listenerContainer.setQueues(this.rabbitConfig.sampleQueue());
-        listenerContainer.setConcurrentConsumers(10);
-        listenerContainer.setPrefetchCount(100);
+        listenerContainer.setConcurrentConsumers(8);
+        listenerContainer.setPrefetchCount(500);
         return listenerContainer;
     }
 

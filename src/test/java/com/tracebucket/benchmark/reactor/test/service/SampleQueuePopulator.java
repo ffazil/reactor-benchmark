@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by ffl on 20-01-2015.
  */
@@ -25,9 +28,18 @@ public class SampleQueuePopulator {
 
     @Test
     public void populateTestData() throws Exception {
-        for (int i = 0; i < 100000; i++) {
-            this.sampleGateway.sendMessage("Test Message " + i);
+        Set<String> messages = generateData();
+        messages.parallelStream()
+                .forEach(message -> this.sampleGateway.sendMessage(message));
+    }
+
+    public Set<String> generateData(){
+        Set<String> messages = new HashSet<>(0);
+
+        for(int i = 0;i < 1000000; i++){
+            messages.add("Test Message " + i);
         }
+        return messages;
     }
 
     @Configuration
