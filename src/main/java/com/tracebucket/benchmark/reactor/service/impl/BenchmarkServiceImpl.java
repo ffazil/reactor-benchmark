@@ -30,6 +30,7 @@ public class BenchmarkServiceImpl implements BenchmarkService{
     @Override
     @Selector(value = "message", reactor = "@eventBus")
     public void payload(Event<Object> payload) {
+        //Utils.sleep(30);
         log.info("Processed event " + payload.getData().toString());
     }
 }
