@@ -34,12 +34,12 @@ public class RabbitTestConfig {
 
     @Bean
     public Queue sampleQueue(){
-        return new Queue("sample.queue", true, false, false);
+        return new Queue("benchmark.queue", false, false, false);
     }
 
     @Bean
     public DirectExchange sampleExchange(){
-        return new DirectExchange("sample.exchange", true, false);
+        return new DirectExchange("benchmark.exchange", false, false);
     }
 
     @Bean

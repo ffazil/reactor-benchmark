@@ -14,7 +14,7 @@ public class RabbitConfig {
 
     @Bean
     public Queue sampleQueue() {
-        return new Queue("sample.queue", true, false, false);
+        return new Queue("benchmark.queue", false, false, false);
     }
 
 }
