@@ -2,6 +2,8 @@ package com.tracebucket.benchmark.reactor.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -20,11 +22,15 @@ import reactor.core.Reactor;
 import reactor.event.Event;
 
 @Configuration
+@EnableRabbit
 public class RabbitInboundFlow {
     private static final Logger logger = LoggerFactory.getLogger(RabbitInboundFlow.class);
 
     @Autowired
     private RabbitConfig rabbitConfig;
+
+    @Autowired
+    private Reactor eventBus;
 
 
 
@@ -41,10 +47,18 @@ public class RabbitInboundFlow {
         return cachingConnectionFactory;
     }
 
-    @Autowired
-    private Reactor eventBus;
-
     @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        factory.setConcurrentConsumers(3);
+        factory.setMaxConcurrentConsumers(10);
+        return factory;
+    }
+
+
+
+    /*@Bean
     public SimpleMessageListenerContainer simpleMessageListenerContainer() {
         SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
         listenerContainer.setConnectionFactory(this.connectionFactory());
@@ -52,9 +66,9 @@ public class RabbitInboundFlow {
         listenerContainer.setConcurrentConsumers(8);
         listenerContainer.setPrefetchCount(500);
         return listenerContainer;
-    }
+    }*/
 
-    @Bean
+    /*@Bean
     public IntegrationFlow inboundFlow() {
         return IntegrationFlows.from(Amqp.inboundAdapter(simpleMessageListenerContainer()))
                 .transform(Transformers.objectToString())
@@ -64,7 +78,7 @@ public class RabbitInboundFlow {
                     eventBus.notify("message", Event.<Object>wrap(m.getPayload()));
                 }, c -> c.advice(this.retryAdvice()))
                 .get();
-    }
+    }*/
 
     @Bean
     public RequestHandlerRetryAdvice retryAdvice() {
