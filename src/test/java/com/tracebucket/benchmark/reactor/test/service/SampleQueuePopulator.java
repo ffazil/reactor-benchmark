@@ -36,7 +36,7 @@ public class SampleQueuePopulator {
     public Set<String> generateData(){
         Set<String> messages = new HashSet<>(0);
 
-        for(int i = 0;i < 6500000; i++){
+        for(int i = 0;i < 1000000; i++){
             messages.add("Test Message " + i);
         }
         return messages;
