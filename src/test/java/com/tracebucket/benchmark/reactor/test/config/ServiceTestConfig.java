@@ -10,9 +10,9 @@ import reactor.core.spec.Reactors;
 import reactor.spring.context.config.EnableReactor;
 
 
-@Configuration
+/*@Configuration
 @ComponentScan(basePackages = {"com.tracebucket.benchmark.reactor.service.impl"}, scopedProxy = ScopedProxyMode.INTERFACES)
-@EnableReactor
+@EnableReactor*/
 public class ServiceTestConfig {
 
     @Bean
